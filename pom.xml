@@ -11,6 +11,7 @@
     <modules>
         <module>standard</module>
         <module>algorithms</module>
+        <module>microbenchmark</module>
     </modules>
 
     <name>on-my-java</name>
@@ -21,6 +22,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.13.1</junit.version>
         <jmh.version>1.27</jmh.version>
+        <lombok.version>1.18.16</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -34,6 +36,11 @@
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-core</artifactId>
                 <version>${jmh.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>

@@ -23,14 +23,18 @@ public class UdpServer {
 
             try (val selector = Selector.open()) {
                 channel.register(selector, SelectionKey.OP_READ);
+                // 必须先调用 select() 方法才能更新 selectedKeys() 对应的集合
                 while (selector.select() > 0) {
                     val buffer = ByteBuffer.allocate(1 << 10);
-                    for (SelectionKey key : selector.selectedKeys()) {
-                        if (key.isReadable()) {
+                    val keyIterator = selector.selectedKeys().iterator();
+                    while (keyIterator.hasNext()) {
+                        if (keyIterator.next().isReadable()) {
                             val client = channel.receive(buffer);
                             buffer.flip();
                             System.out.println(new String(buffer.array(), 0, buffer.limit()));
                             buffer.clear();
+                            // 将处理过的 Key 移除
+                            keyIterator.remove();
                         }
                     }
                 }

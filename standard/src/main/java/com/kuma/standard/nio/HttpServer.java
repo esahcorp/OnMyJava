@@ -9,7 +9,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -30,7 +29,7 @@ public class HttpServer {
                     val keyIterator = selector.selectedKeys().iterator();
                     while (keyIterator.hasNext()) {
                         val key = keyIterator.next();
-                        new HttpHandler(key).handKey();
+                        new HttpHandler(key).run();
                         keyIterator.remove();
                     }
                 }
@@ -40,7 +39,7 @@ public class HttpServer {
         }
     }
 
-    private static class HttpHandler {
+    private static class HttpHandler implements Runnable {
         private final SelectionKey key;
 
         public HttpHandler(SelectionKey key) {
@@ -60,7 +59,7 @@ public class HttpServer {
 
                 if (sc.read(buffer) != -1) {
                     buffer.flip();
-                    String receivedString = Charset.forName(StandardCharsets.UTF_8.name()).decode(buffer).toString();
+                    String receivedString = StandardCharsets.UTF_8.decode(buffer).toString();
                     String[] requestMsg = receivedString.split("\r\n");
                     for (String s : requestMsg) {
                         System.out.println(s);
@@ -96,13 +95,18 @@ public class HttpServer {
             }
         }
 
-        public void handKey() throws IOException {
-            if (key.isAcceptable()) {
-                handleAccept();
-            }
+        @Override
+        public void run() {
+            try {
+                if (key.isAcceptable()) {
+                    handleAccept();
+                }
 
-            if (key.isReadable()) {
-                handleRead();
+                if (key.isReadable()) {
+                    handleRead();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

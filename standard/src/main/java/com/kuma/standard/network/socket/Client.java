@@ -1,4 +1,4 @@
-package com.kuma.standard.socket;
+package com.kuma.standard.network.socket;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -31,7 +31,7 @@ public class NettyDiscardServer {
             bootstrap.group(acceptorLoopGroup, workerLoopGroup)
                     .channel(NioServerSocketChannel.class)
                     .localAddress(port)
-                    .option(ChannelOption.SO_KEEPALIVE, true)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
